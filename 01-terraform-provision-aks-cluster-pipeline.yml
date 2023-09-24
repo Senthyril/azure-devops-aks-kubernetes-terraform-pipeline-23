@@ -79,7 +79,7 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'init'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform-manifests'
+              workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
               backendServiceArm: 'terraform-aks-azurerm-svc-con'
               backendAzureRmResourceGroupName: 'terraform-storage-rg'
               backendAzureRmStorageAccountName: 'terraformstatefile8888'
@@ -90,7 +90,7 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'plan'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform-manifests'
+              workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
               commandOptions: '-var ssh_public_key=$(sshkey.secureFilePath) -var environment=$(DEV_ENVIRONMENT) -out $(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
               environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
           - task: TerraformTaskV4@4
@@ -98,6 +98,6 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'apply'
-              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform-manifests'
+              workingDirectory: '$(Pipeline.Workspace)/terraform-manifests-out'
               commandOptions: '$(Pipeline.Workspace)/terraform-manifests-out/$(DEV_ENVIRONMENT)-$(Build.BuildId).out'
               environmentServiceNameAzureRM: 'terraform-aks-azurerm-svc-con'
